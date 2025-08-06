@@ -9,6 +9,7 @@ Step 2: Call `/agent/{agent_id}/triggers/add_youtube_channels` POST with payload
     ],
     "trigger_callback_url": "url_here"
 }
+```
 
 This creates a youtube trigger on your agent if a youtube trigger node doesn't already exist on your agent. If there is a youtube trigger on your agent already, making this POST request will just add those channels to that youtube trigger node. Note that trigger_callback_url is the webhook url that gets hit with POST requests whenever the youtube trigger node gets triggered. If you add `trigger_callback_url` to your POST request and you already have a callback_url to your trigger, it will overwrite that callback_url on your trigger.
 
