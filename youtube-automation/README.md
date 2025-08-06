@@ -112,11 +112,43 @@ brew install ngrok  # macOS
 ```bash
 # Set your Mosaic API key
 export MOSAIC_API_KEY=mk_your_api_key_here
+
+# Test your API key is working
+python test_auth.py
 ```
 
 ## Scripts
 
-### 1. add_triggers.py
+### 1. test_auth.py
+
+This script validates your Mosaic API key by making a test API call. Use this to verify your authentication is working correctly before running other scripts.
+
+#### Usage
+
+```bash
+# Using environment variable
+export MOSAIC_API_KEY=mk_your_api_key
+python test_auth.py
+
+# With explicit API key
+python test_auth.py --api-key mk_your_api_key
+
+# Verbose output
+python test_auth.py --verbose
+```
+
+#### Options
+
+- `--api-key`: Mosaic API key (or use MOSAIC_API_KEY env var)
+- `--base-url`: Custom Mosaic API URL (default: https://api.mosaic.so)
+- `--verbose`: Show detailed testing information
+
+This script will:
+- Validate your API key format
+- Test authentication with the Mosaic API
+- Display detailed results and troubleshooting tips
+
+### 2. add_triggers.py
 
 This script adds YouTube channels to your agent as triggers. After adding them, it calls GET `/agent/[agent_id]/triggers` to validate that the YouTube channels have been added.
 
@@ -151,7 +183,7 @@ python add_triggers.py \
 - `--remove-webhook`: Remove the webhook URL from the trigger
 - `--base-url`: Custom Mosaic API URL (default: https://api.mosaic.so)
 
-### 2. webhook_listener.py
+### 3. webhook_listener.py
 
 This script starts a local web server to receive and display webhook notifications from Mosaic agents and triggers.
 
@@ -188,17 +220,21 @@ DEBUG=1 python webhook_listener.py --debug
 ## Complete Example Workflow
 
 ```bash
-# Step 1: Start webhook listener with ngrok
+# Step 1: Test your API key
+python test_auth.py
+# Ensure authentication is working before proceeding
+
+# Step 2: Start webhook listener with ngrok
 python webhook_listener.py --ngrok
 # Note the ngrok URL (e.g., https://abc123.ngrok.io)
 
-# Step 2: Add YouTube triggers with webhook
+# Step 3: Add YouTube triggers with webhook
 python add_triggers.py \
   --agent-id YOUR_AGENT_ID \
   --channels "@YourFavoriteChannel,UCxxxxxx" \
   --webhook https://abc123.ngrok.io/webhook
 
-# Step 3: Watch the webhook listener console for events
+# Step 4: Watch the webhook listener console for events
 # You'll see notifications when:
 # - A YouTube video triggers an agent run (RUN_STARTED)
 # - Outputs are completed (OUTPUTS_FINISHED)
