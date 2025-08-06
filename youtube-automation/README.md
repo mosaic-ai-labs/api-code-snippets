@@ -94,9 +94,125 @@ When a run is fully finished, this POST request payload will be sent:
 }
 ```
 
-To test webhooks locally, we recommend setting up an ngrok channel so api.mosaic.so can hit your webhook endpoint.
+## Setup
 
-In this folder, we have two files:
+### Installation
 
-add_triggers.py -> this script takes in an agent_id and adds youtube channels to your agent as a trigger. After adding them, the script calls GET `/agent/[agent_id]/triggers` to validate that the youtube channels have been added to your agent.
-webhook_listener.py -> this script listens to webhook requests and prints them out to the console.
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# For ngrok support (optional, for local testing)
+# Download from https://ngrok.com or install via homebrew:
+brew install ngrok  # macOS
+```
+
+### Environment Setup
+
+```bash
+# Set your Mosaic API key
+export MOSAIC_API_KEY=mk_your_api_key_here
+```
+
+## Scripts
+
+### 1. add_triggers.py
+
+This script adds YouTube channels to your agent as triggers. After adding them, it calls GET `/agent/[agent_id]/triggers` to validate that the YouTube channels have been added.
+
+#### Usage
+
+```bash
+# Basic usage with environment variable
+python add_triggers.py --agent-id YOUR_AGENT_ID --channels "UCxxxxxx,@channelname"
+
+# With explicit API key
+python add_triggers.py --agent-id YOUR_AGENT_ID --api-key mk_xxx --channels UCxxxxxx
+
+# Multiple channels with webhook
+python add_triggers.py \
+  --agent-id YOUR_AGENT_ID \
+  --channels "UCxxxxxx,@mkbhd,https://youtube.com/@channel" \
+  --webhook https://your-app.com/webhook
+
+# Remove webhook URL from trigger
+python add_triggers.py \
+  --agent-id YOUR_AGENT_ID \
+  --channels UCxxxxxx \
+  --remove-webhook
+```
+
+#### Options
+
+- `--agent-id`: Your Mosaic agent ID (required)
+- `--api-key`: Mosaic API key (or use MOSAIC_API_KEY env var)
+- `--channels`: Comma-separated YouTube channel IDs, handles (@name), or URLs (required)
+- `--webhook`: Optional webhook URL for notifications
+- `--remove-webhook`: Remove the webhook URL from the trigger
+- `--base-url`: Custom Mosaic API URL (default: https://api.mosaic.so)
+
+### 2. webhook_listener.py
+
+This script starts a local web server to receive and display webhook notifications from Mosaic agents and triggers.
+
+#### Usage
+
+```bash
+# Start on default port (3000)
+python webhook_listener.py
+
+# Custom port
+python webhook_listener.py --port 8080
+
+# With ngrok tunnel for public URL
+python webhook_listener.py --ngrok
+
+# Debug mode (shows raw JSON)
+DEBUG=1 python webhook_listener.py --debug
+```
+
+#### Options
+
+- `--port`: Port to listen on (default: 3000)
+- `--host`: Host to bind to (default: 0.0.0.0)
+- `--ngrok`: Start ngrok tunnel for public URL
+- `--debug`: Enable Flask debug mode
+
+#### Webhook Endpoints
+
+- `/webhook` - Main webhook endpoint
+- `/webhook/{token}` - Webhook with custom token/path
+- `/history` - View last 10 webhooks
+- `/health` - Health check endpoint
+
+## Complete Example Workflow
+
+```bash
+# Step 1: Start webhook listener with ngrok
+python webhook_listener.py --ngrok
+# Note the ngrok URL (e.g., https://abc123.ngrok.io)
+
+# Step 2: Add YouTube triggers with webhook
+python add_triggers.py \
+  --agent-id YOUR_AGENT_ID \
+  --channels "@YourFavoriteChannel,UCxxxxxx" \
+  --webhook https://abc123.ngrok.io/webhook
+
+# Step 3: Watch the webhook listener console for events
+# You'll see notifications when:
+# - A YouTube video triggers an agent run (RUN_STARTED)
+# - Outputs are completed (OUTPUTS_FINISHED)
+# - The run finishes (RUN_FINISHED)
+```
+
+## Testing Webhooks Locally
+
+We recommend using ngrok for local webhook testing so api.mosaic.so can reach your local webhook endpoint:
+
+1. Install ngrok from https://ngrok.com
+2. Run `python webhook_listener.py --ngrok`
+3. Use the provided ngrok URL when setting up triggers
+
+## Webhook Payload Examples
+
+See the webhook payload examples above for the structure of webhook notifications you'll receive.

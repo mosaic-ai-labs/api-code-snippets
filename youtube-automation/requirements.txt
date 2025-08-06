@@ -1,0 +1,11 @@
+# Mosaic YouTube Automation Dependencies
+
+# HTTP requests library
+requests==2.31.0
+
+# Web framework for webhook listener
+Flask==3.0.0
+
+# Development dependencies (optional)
+# For ngrok integration (install ngrok separately: https://ngrok.com)
+pyngrok==7.0.3  # Optional: Python wrapper for ngrok
