@@ -98,5 +98,5 @@ To test webhooks locally, we recommend setting up an ngrok channel so api.mosaic
 
 In this folder, we have two files:
 
-app.py -> this script takes in an agent_id and adds youtube channels to your agent as a trigger. After adding them, the script calls GET `/agent/[agent_id]/triggers` to validate that the youtube channels have been added to your agent.
+add_triggers.py -> this script takes in an agent_id and adds youtube channels to your agent as a trigger. After adding them, the script calls GET `/agent/[agent_id]/triggers` to validate that the youtube channels have been added to your agent.
 webhook_listener.py -> this script listens to webhook requests and prints them out to the console.
