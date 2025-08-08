@@ -15,7 +15,7 @@ from typing import List, Optional
 import requests
 
 
-DEFAULT_BASE_URL = "http://localhost:8080"
+DEFAULT_BASE_URL = "https://api.mosaic.so"
 
 
 def resolve_api_key(explicit_key: Optional[str]) -> str:
