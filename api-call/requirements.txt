@@ -1,0 +1,5 @@
+requests==2.31.0
+Flask==3.0.0
+# Optional: install ngrok binary from https://ngrok.com
+pyngrok==7.0.3
+
