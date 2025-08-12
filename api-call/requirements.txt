@@ -1,5 +1,6 @@
 requests==2.31.0
 Flask==3.0.0
+moviepy==1.0.3  # For video metadata extraction
 # Optional: install ngrok binary from https://ngrok.com
 pyngrok==7.0.3
 
