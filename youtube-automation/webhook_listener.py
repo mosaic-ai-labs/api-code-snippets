@@ -218,7 +218,7 @@ def webhook(token=None):
         
         # Get headers
         headers = dict(request.headers)
-        webhook_secret = headers.get('X-Webhook-Secret')
+        webhook_secret = headers.get('X-Mosaic-Signature')
         
         # Store in history
         webhook_entry = {
